@@ -1,19 +1,15 @@
 function sumOfMultiplicationOfArrays(a,b){
-  var sum = 0;
-  for (var i=a.length;i--;){
-    sum += a[i] * b[i];
-  }
-  return sum;
+  return a.reduce(function(sum, current, index){
+    return sum + current * b[index];
+  }, 0);
 }
 function sumOfArray(a){
-  var sum = 0;
-  for (var i=a.length;i--;){
-    sum += a[i];
-  }
-  return sum;
+  return a.reduce(function(sum, current) {
+    return sum + current;
+  }, 0);
 }
 function getMessage(a,b){
-  switch (typeof(a)){
+  switch (typeof a){
     case 'boolean':
       if (a){
         return 'Я попал в ' + b;
@@ -23,7 +19,7 @@ function getMessage(a,b){
     case 'number':
       return 'Я прыгнул на ' + (a * 100) + ' сантиметров';
     case 'object':
-      if (typeof(b) == 'object'){
+      if (typeof b === 'object'){
         return 'Я прошёл ' + sumOfMultiplicationOfArrays(a,b) + ' метров';
       } else {
         return 'Я прошёл ' + sumOfArray(a) + ' шагов';
