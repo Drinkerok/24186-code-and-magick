@@ -424,14 +424,12 @@
         var words = text.split(' ');
         var line = '';
         var text_lines = [];
-            console.log(max_width);
 
         for (var i=0; i<words.length; i++){
           // Тестовая строка. Добавляем к ней по слову
           var test_line = line + words[i] + ' ';
           // Замеряем ширину тестовой строки
           var line_width = ctx.measureText(test_line).width;
-          console.log(test_line + ' ' + line_width);
           // Если ширина больше максимальной
           if (line_width > max_width){
             // Добавляем ее в массив строк
