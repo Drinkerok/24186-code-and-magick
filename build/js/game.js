@@ -378,18 +378,86 @@
      * Отрисовка экрана паузы.
      */
     _drawPauseScreen: function() {
+      function drawMessage(ctx, bg_width, text){
+        var offset = 10;
+        var x1 = 300;
+        var y1 = 100;
+        var margin_left = 20;
+        var margin_top = 20;
+        var line_height = 15;
+        var bg_height;
+        var text_lines = [];
+
+        // Разбиваем текст по строкам
+        // margin_left * 3, потому что measureText как-то странно считает
+        text_lines = wrapText(ctx, text, bg_width - margin_left * 3);
+        // Высота блока
+        bg_height = text_lines.length * line_height + margin_top;
+        // Рисуем тень - блок со смещением
+        var color = "rgba(0,0,0,0.7)";
+        drawMessageBackground(ctx, bg_width, bg_height, x1+offset, y1+offset, color);
+        // Рисуем сам блок
+        color = "#fff";
+        drawMessageBackground(ctx, bg_width, bg_height, x1, y1, color);
+        // Рисуем текст
+        drawText(ctx, x1 + margin_left, y1 + margin_top, text_lines, line_height);
+      }
+      function drawMessageBackground(ctx, bg_width, bg_height, x, y, color){
+
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.rect(x, y, bg_width, bg_height);
+        ctx.fill();
+        ctx.closePath();
+      }
+      function drawText(ctx, x, y, text_lines, line_height){
+        ctx.font='16px PT Mono';
+        ctx.fillStyle = '#000';
+        var margin_top = 0;
+
+        for (var i=0; i<text_lines.length; i++){
+          ctx.fillText(text_lines[i], x, y + margin_top);
+          margin_top += line_height;
+        }
+      }
+      function wrapText(ctx, text, max_width){
+        var words = text.split(' ');
+        var line = '';
+        var text_lines = [];
+
+        for (var i=0; i<words.length; i++){
+          // Тестовая строка. Добавляем к ней по слову
+          var test_line = line + words[i] + ' ';
+          // Замеряем ширину тестовой строки
+          var line_width = ctx.measureText(test_line).width;
+          // Если ширина больше максимальной
+          if (line_width > max_width){
+            // Добавляем ее в массив строк
+            text_lines.push(line);
+            // А для следующей строки добавляем текущее слово
+            line = words[i] + " ";
+
+          } else {
+            line = test_line;
+          }
+        }
+        // Последнюю строку тоже добавляем
+        text_lines.push(line);
+        return text_lines;
+      }
+
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          console.log('you have won!');
+          drawMessage(this.ctx, 200, "Вы победили!");
           break;
         case Verdict.FAIL:
-          console.log('you have failed!');
+          drawMessage(this.ctx, 200, "Вы проиграли!"); 
           break;
         case Verdict.PAUSE:
-          console.log('game is on pause!');
+          drawMessage(this.ctx, 200, "Игра на паузе"); 
           break;
         case Verdict.INTRO:
-          console.log('welcome to the game! Press Space to start');
+          drawMessage(this.ctx, 200, "Я умею переремещаться и летать по нажатию на стрелки. А если нажать на шифт, я выстрелю фаерболом! Нажмите ПРОБЕЛ, чтобы начать");
           break;
       }
     },
