@@ -13,6 +13,10 @@
   var form_labels = document.querySelectorAll('.review-fields-label');
   var form_submit = document.querySelector('.review-submit');
 
+  var browserCookies = require('browser-cookies');
+  if (browserCookies.get('name')) form_name_input.value = browserCookies.get('name');
+  if (browserCookies.get('mark')) document.getElementById('review-mark-' + browserCookies.get('mark')).checked = 'checked';
+
   formOpenButton.onclick = function(evt) {
     evt.preventDefault();
     formContainer.classList.remove('invisible');
@@ -24,7 +28,7 @@
   };
 
   var marks = document.getElementsByClassName('review-mark-label');
-  var active_mark = 3;
+  var active_mark = browserCookies.get('mark') || 3;
   isRequired(active_mark < 3, form_comment_label);
   isRequired(form_name_input.value == '', form_name_label);
 
@@ -70,6 +74,25 @@
   // Отправка формы
   form_review.onsubmit = function(e){
     e.preventDefault();
-    if (checkFormControl()) this.submit;
+    if (checkFormControl()) {
+      // Сохраняем в куки
+      // Сколько прошло дней с моего др
+      var now = new Date();
+      var my_birthsday = new Date(0, 8, 6);
+      if (now.getMonth() > my_birthsday.getMonth() && now.getDate() > my_birthsday.getDate()){
+        my_birthsday.setFullYear(now.getFullYear());
+      } else {
+        my_birthsday.setFullYear(now.getFullYear() - 1);
+      }
+      var days_passed = Math.floor (Math.abs(now - my_birthsday) / 1000 / 60 / 60 / 24);
+
+      browserCookies.set('name', form_name_input.value, {
+        expires: Date.now() + days_passed
+      });
+      browserCookies.set('mark', active_mark + '', {
+        expires: Date.now() + days_passed
+      });
+      this.submit;
+    }
   }
 })();

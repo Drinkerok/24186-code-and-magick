@@ -1,22 +1,27 @@
 {
-  "name": "24186-code-and-magick",
+  "name": "24186-kekstagram",
   "version": "0.1.0",
   "private": true,
-  "description": "Личный проект «Код и Магия» от HTML Academy",
+  "description": "Личный проект «Кекстаграм» от HTML Academy",
   "author": "Дмитрий Казанцев",
   "repository": {
     "type": "git",
-    "url": "git@github.com:htmlacademy-javascript/24186-code-and-magick.git"
+    "url": "git://github.com/htmlacademy-javascript/24186-kekstagram.git"
   },
   "bugs": {
-    "url": "https://github.com/htmlacademy-javascript/24186-code-and-magick/issues"
+    "url": "https://github.com/htmlacademy-javascript/24186-kekstagram/issues"
   },
-  "homepage": "https://github.com/htmlacademy-javascript/24186-code-and-magick",
-  "devDependencies": {
-    "eslint": "2.4.0"
+  "homepage": "https://github.com/htmlacademy-javascript/24186-kekstagram",
+  "dependencies": {
+    "eslint": "^2.4.0",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1",
+    "browser-cookies": "1.0.8"
   },
   "scripts": {
-    "test": "eslint build/js"
+    "build": "webpack --config webpack.config.js",
+    "test": "eslint src",
+    "start": "webpack-dev-server --watch --config webpack.config.js"
   },
   "engines": {
     "node": "^5.0.0"
