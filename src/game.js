@@ -752,4 +752,39 @@
   var game = new Game(document.querySelector('.demo'));
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
+
+
+
+  var scrollTimeout;
+  var clouds = document.querySelector('.header-clouds');
+  var gameBlock = document.querySelector('.demo');
+  // смещение облаков через background-position-x
+  function moveClouds(){
+    clouds.style.backgroundPositionX = window.pageYOffset + 'px';
+  }
+  // виден ли блок с облаками
+  function isCloudsVisible(){
+    var cloudsCoords = clouds.getBoundingClientRect();
+    return (cloudsCoords.bottom > 0) ? true : false;
+  }
+  // виден ли блок с игрой
+  function isGameVisible(){
+    var gameBlockCoords = gameBlock.getBoundingClientRect();
+    return (gameBlockCoords.bottom > 0) ? true : false;
+  }
+  window.addEventListener('scroll', moveClouds);
+  window.addEventListener('scroll', function(){
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(function(){
+      if (isCloudsVisible()) {
+        window.removeEventListener('click', moveClouds);
+      } else {
+        window.addEventListener('click', moveClouds);
+      }
+
+      if (!isGameVisible()) {
+        game.setGameStatus(Game.Verdict.PAUSE);
+      }
+    }, 100);
+  });
 })();
